@@ -67,7 +67,7 @@ vulnerable_example()
 
 # Use this secure approach:
 secure_example()
-```
+```text
 **Priority:** Critical/High/Medium/Low
 ```
 

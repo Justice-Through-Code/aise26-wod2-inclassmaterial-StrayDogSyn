@@ -27,7 +27,8 @@ Choose the correct first step:
 - [ ] D) Delete the problematic commits
 
 **Why is this the right first step?**
-_________________________________
+
+---
 
 ### Phase 2: Git History Cleanup (Next 4 minutes)
 
@@ -56,7 +57,8 @@ git rebase -i HEAD~3
 ```
 
 **Which option would you choose and why?**
-_________________________________
+
+---
 
 ### Phase 3: Prevention Implementation (Last 3 minutes)
 
@@ -71,7 +73,7 @@ config/secrets/
 credentials.json
 ```
 
-2. **Create pre-commit hook (example):**
+1. **Create pre-commit hook (example):**
 ```bash
 #!/bin/bash
 # Check for secrets before commit
@@ -81,9 +83,10 @@ if grep -r "api_key\s*=" . ; then
 fi
 ```
 
-3. **Document the incident:**
+1. **Document the incident:**
 What would you write in your incident report?
-_________________________________
+
+---
 
 ---
 
@@ -91,17 +94,17 @@ _________________________________
 
 **Share with your breakout room:**
 
-### Crisis Response Questions:
+### Crisis Response Questions
 1. **Speed vs. Safety:** When would you choose history rewrite vs. revert?
 2. **Communication:** Who would you notify during this incident?
 3. **Prevention:** What other security measures could prevent this?
 
-### Git Command Practice:
+### Git Command Practice
 1. **Have you used `git revert` vs `git rebase -i` before?**
 2. **What's the difference between `git reset` and `git revert`?**
 3. **When is `git push --force` acceptable?**
 
-### Real-World Experience:
+### Real-World Experience
 1. **Has anyone experienced a similar incident?**
 2. **What security practices does your workplace use?**
 3. **How would your team handle credential rotation?**
