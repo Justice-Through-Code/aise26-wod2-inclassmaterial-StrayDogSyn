@@ -1,24 +1,21 @@
-# Professional Git Workflows — Student Guide
+# Secure User Management API
 
-## Overview
-**Format:** In-class breakout exercises + after-class individual assignment  
-**Language:** Python  
-**Skills:** Professional Git workflows, code reviews, merge conflicts, security
+[![CI/CD Pipeline](https://github.com/yourusername/secure-api/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/secure-api/actions/workflows/ci.yml)
+[![Security Rating](https://img.shields.io/badge/security-A+-green.svg)](https://github.com/yourusername/secure-api)
 
----
+A professionally configured Flask API with comprehensive security measures, automated testing, and proper development workflows.
 
-## Learning Objectives
-By completing this assignment, you will:
-- Design custom Git workflows that fit team needs
-- Write professional pull requests and provide constructive code reviews  
-- Resolve merge conflicts systematically and safely
-- Implement security best practices and catch common vulnerabilities
-- Set up automated quality gates with branch protection and hooks
-- Handle Git disasters and recovery scenarios
+## 🔒 Security Features
 
----
+- **Authentication & Authorization**: JWT-based authentication with secure token handling
+- **Password Security**: bcrypt hashing with salt
+- **Input Validation**: Comprehensive validation and sanitization
+- **SQL Injection Prevention**: Parameterized queries throughout
+- **Secrets Management**: Environment-based configuration
+- **Security Scanning**: Automated vulnerability detection with Bandit
+- **Pre-commit Hooks**: Automated security and quality checks
 
-## How This Works
+## 🚀 Quick Start
 
 ### In Class
 - Complete the breakout exercises in `breakout-exercises/` locally with classmates:
@@ -37,7 +34,7 @@ Note: Some repository settings (like branch protection) require repository admin
 
 ### Part 1: Repository Setup & Security
 
-#### Your Task
+#### Setup Task
 Transform the provided basic Python API into a professionally configured repository with security measures.
 
 #### Starter Code
@@ -75,7 +72,7 @@ You'll receive a basic Flask API with intentional security issues:
 
 ### Part 2: Code Review Mastery (In Class)
 
-#### Your Task
+#### Review Task
 Review the provided Python authentication code and identify security vulnerabilities, then provide professional feedback.
 
 #### Code Review Exercise
@@ -110,7 +107,7 @@ old_code_example()
 
 # Use this secure approach:
 secure_code_example()
-```
+```text
 **Priority:** Critical/High/Medium/Low
 ```
 
@@ -123,10 +120,10 @@ You'll work through a realistic merge conflict where two developers added differ
 - **Branch A:** Added authentication and input validation
 - **Branch B:** Added database integration and user management
 
-#### Your Task
+#### Merge Conflict Task
 Resolve the conflict by intelligently combining both features rather than simply choosing one side.
 
-#### What to Produce
+#### Deliverables
 1. **Intelligent Resolution**
    - Combine functionality from both branches
    - Maintain all important features
