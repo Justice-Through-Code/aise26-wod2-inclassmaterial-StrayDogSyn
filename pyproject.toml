@@ -1,0 +1,123 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secure-user-api"
+version = "1.0.0"
+description = "A secure Flask API with comprehensive security measures"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"},
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "Flask>=3.0.0",
+    "bcrypt>=4.1.2",
+    "PyJWT>=2.8.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-flask>=1.3.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.12.1",
+    "isort>=5.13.2",
+    "flake8>=7.0.0",
+    "pre-commit>=3.6.0",
+    "bandit[toml]>=1.7.5",
+    "safety>=2.3.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/secure-api"
+Repository = "https://github.com/yourusername/secure-api.git"
+Issues = "https://github.com/yourusername/secure-api/issues"
+
+# Black configuration
+[tool.black]
+line-length = 88
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+# isort configuration  
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["app", "tests"]
+
+# Pytest configuration
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=app",
+    "--cov-report=term-missing",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests", 
+    "security: Security tests",
+    "slow: Slow running tests",
+]
+
+# Coverage configuration
+[tool.coverage.run]
+source = ["app"]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "*/env/*",
+    "setup.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+# Bandit security linter configuration
+[tool.bandit]
+exclude_dirs = ["tests", "venv", "env"]
+skips = ["B101"]  # Skip assert_used test
+
+[tool.bandit.assert_used]
+skips = ["*_test.py", "test_*.py"]

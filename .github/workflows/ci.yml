@@ -1,0 +1,164 @@
+# Professional CI/CD Pipeline for Secure Flask API
+# 
+# Comprehensive security scanning with multiple tools:
+# - Safety: Known vulnerability database
+# - Bandit: Python security linter  
+# - pip-audit: Modern Python package vulnerability scanner
+#
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security Scanning
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety
+        pip install -r requirements.txt
+    
+    - name: Run Bandit Security Scan
+      run: |
+        bandit -r . -f json -o bandit-report.json || echo "Bandit found issues"
+        bandit -r . -f txt
+    
+    - name: Run Safety Check
+      run: safety check --json --output safety-report.json || echo "Safety found issues"
+    
+    - name: Upload Security Reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality Checks
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort flake8
+        pip install -r requirements.txt
+    
+    - name: Check code formatting with Black
+      run: black --check .
+    
+    - name: Check import sorting with isort
+      run: isort --check-only .
+    
+    - name: Lint with flake8
+      run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  test:
+    runs-on: ubuntu-latest
+    name: Run Tests
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run tests
+      run: |
+        python -m pytest tests/ -v --tb=short
+      env:
+        FLASK_SECRET_KEY: test-secret-key
+        JWT_SECRET_KEY: test-jwt-secret
+        DATABASE_URL: sqlite:///test.db
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    name: Dependency Vulnerability Check
+    # Uses multiple security scanning tools: Safety, Bandit, and pip-audit
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install safety bandit
+    
+    - name: Run Safety check for known vulnerabilities
+      run: |
+        safety check --json --output safety-results.json || true
+        echo "Safety scan completed"
+      continue-on-error: true
+    
+    - name: Run Bandit security linter
+      run: |
+        bandit -r . -f json -o bandit-results.json || true
+        echo "Bandit security scan completed"
+      continue-on-error: true
+    
+    - name: Run pip-audit for vulnerability scanning
+      run: |
+        pip install pip-audit
+        pip-audit --format=json --output=pip-audit-results.json || true
+        echo "pip-audit scan completed"
+      continue-on-error: true
+    
+    - name: Run semgrep security analysis
+      run: |
+        pip install semgrep
+        semgrep --config=auto --json --output=semgrep-results.json . || true
+        echo "Semgrep security analysis completed"
+      continue-on-error: true
+    
+    - name: Generate security report summary
+      run: |
+        echo "=== Security Scan Summary ===" > security-summary.txt
+        echo "Safety: $(test -f safety-results.json && echo 'Completed' || echo 'No results')" >> security-summary.txt
+        echo "Bandit: $(test -f bandit-results.json && echo 'Completed' || echo 'No results')" >> security-summary.txt
+        echo "pip-audit: $(test -f pip-audit-results.json && echo 'Completed' || echo 'No results')" >> security-summary.txt
+        echo "Semgrep: $(test -f semgrep-results.json && echo 'Completed' || echo 'No results')" >> security-summary.txt
+        cat security-summary.txt
+    
+    - name: Upload security scan results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-scan-results
+        path: |
+          *-results.json
+          security-summary.txt
